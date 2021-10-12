@@ -1,0 +1,7 @@
+.git
+.idea
+*/logout/
+*.log
+.vscode
+third/gormt/gormt
+model/gormt
