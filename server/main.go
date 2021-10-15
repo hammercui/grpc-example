@@ -9,25 +9,19 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"google.golang.org/grpc"
 	"grpc-example/api"
+	"grpc-example/server/service"
 	"log"
 	"net"
-	"google.golang.org/grpc"
 )
 
 const(
 	address = "localhost:9010"
 )
-type service struct {
 
-}
 
-func (p *service) SayHello(ctx context.Context, in *rpc_package.HelloRequest) (*rpc_package.HelloReply, error){
-	fmt.Println("receive req:",in)
-	return &rpc_package.HelloReply{Message:"success"},nil
-}
 
 func main(){
 	lis,err := net.Listen("tcp",address)
@@ -36,8 +30,11 @@ func main(){
 	}
 	fmt.Println("list server success!",address)
 	s := grpc.NewServer()
+
 	//注册service实现
-	rpc_package.RegisterHelloWorldServiceServer(s,&service{})
+	rpc_package.RegisterHelloWorldServiceServer(s, service.NewHelloWorldService())
+
+
 	fmt.Println("register service success!")
 	defer lis.Close()
 	err = s.Serve(lis)
